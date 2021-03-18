@@ -109,6 +109,13 @@ class PathSquareView(ctx : Context) : View(ctx) {
         fun start() {
             if (!animated) {
                 animated = true
+                view.postInvalidate()
+            }
+        }
+
+        fun stop() {
+            if (animated) {
+                animated = false
             }
         }
     }
@@ -174,6 +181,29 @@ class PathSquareView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : PathSquareView) {
+
+        private val animator : Animator = Animator(view)
+        private val ps : PathSquare = PathSquare(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            ps.draw(canvas, paint)
+            animator.animate {
+                ps.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            ps.startUpdating {
+                animator.start()
+            }
         }
     }
 }
