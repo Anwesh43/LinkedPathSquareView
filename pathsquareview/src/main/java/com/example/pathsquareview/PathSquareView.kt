@@ -208,4 +208,13 @@ class PathSquareView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : PathSquareView {
+            val view : PathSquareView = PathSquareView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
